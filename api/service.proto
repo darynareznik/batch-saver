@@ -1,0 +1,20 @@
+syntax = "proto3";
+package batch_saver;
+option go_package = "github.com/darynareznik/batch-saver/api";
+
+message SaveEventsRequest {
+  Event event = 1;
+}
+
+message Event {
+  string id = 1;
+  string group_id = 2;
+  bytes data = 3;
+}
+
+message SaveEventsResponse {
+}
+
+service BatchSaverService {
+  rpc SaveEvents(stream SaveEventsRequest) returns (SaveEventsResponse);
+}
