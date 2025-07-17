@@ -1,0 +1,30 @@
+services:
+  service:
+    image: batch-saver:latest
+    ports:
+      - 3000:3000
+    environment:
+      APP_LOG_LEVEL: "DEBUG"
+      APP_POSTGRES_HOST: "postgresql"
+      APP_POSTGRES_PORT: "5432"
+      APP_POSTGRES_DB_NAME: "events"
+      APP_POSTGRES_USERNAME: "postgres"
+      APP_POSTGRES_PWD: "postgres"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    restart: always
+
+  postgresql:
+    image: postgres:17-alpine
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "events"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 1s
+      timeout: 1s
+      retries: 3
